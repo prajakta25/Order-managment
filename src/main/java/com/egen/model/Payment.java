@@ -1,9 +1,6 @@
 package com.egen.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
@@ -16,11 +13,16 @@ public class Payment {
     private long cardNumber;
     private int cvv;
     private String expiry;
+    private long paymentConfirmationNumber;
     @ManyToOne
     private Customer customer;
+    @OneToOne
+    private Address billingAddress;
 
-    public Payment(String id, String paymentMethod, long cardNumber, int cvv, String expiry, Customer customer) {
+    public Payment(String id, String paymentMethod, long cardNumber, int cvv, String expiry, long paymentConfirmationNumber, Customer customer, Address billingAddress) {
+        this.paymentConfirmationNumber = paymentConfirmationNumber;
         this.customer = customer;
+        this.billingAddress = billingAddress;
         this.id = String.valueOf(UUID.randomUUID());
         this.paymentMethod = paymentMethod;
         this.cardNumber = cardNumber;
@@ -68,5 +70,21 @@ public class Payment {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    public long getPaymentConfirmationNumber() {
+        return paymentConfirmationNumber;
+    }
+
+    public void setPaymentConfirmationNumber(long paymentConfirmationNumber) {
+        this.paymentConfirmationNumber = paymentConfirmationNumber;
+    }
+
+    public Address getBillingAddress() {
+        return billingAddress;
+    }
+
+    public void setBillingAddress(Address billingAddress) {
+        this.billingAddress = billingAddress;
     }
 }

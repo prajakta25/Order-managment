@@ -18,27 +18,28 @@ public class Order {
     private double tax;
     private double shippingCharges;
     private double total;
-    private long paymentConfirmationNumber;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
     @OneToMany
     private List<Payment> paymentMethods;
     private String shippingMethod;
+    @OneToOne
+    private Address shippingAddress;
 
     public Order(){}
 
-    public Order(String id, String status, Customer customer, List<Items> items, double tax, double shippingCharges, long paymentConfirmationNumber, LocalDateTime createdDate, LocalDateTime modifiedDate, List<Payment> paymentMethods, String shippingMethod) {
+    public Order(String id, String status, Customer customer, List<Items> items, double tax, double shippingCharges, LocalDateTime createdDate, LocalDateTime modifiedDate, List<Payment> paymentMethods, String shippingMethod, Address shippingAddress) {
         this.id = id;
         this.status = status;
         this.customer = customer;
         this.items = items;
         this.tax = tax;
         this.shippingCharges = shippingCharges;
-        this.paymentConfirmationNumber = paymentConfirmationNumber;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
         this.paymentMethods = paymentMethods;
         this.shippingMethod = shippingMethod;
+        this.shippingAddress = shippingAddress;
     }
 
     public String getId() {
@@ -94,15 +95,6 @@ public class Order {
         double total=getSubtotal()+getTax()+getShippingCharges();
         return total;
     }
-
-    public long getPaymentConfirmationNumber() {
-        return paymentConfirmationNumber;
-    }
-
-    public void setPaymentConfirmationNumber(long paymentConfirmationNumber) {
-        this.paymentConfirmationNumber = paymentConfirmationNumber;
-    }
-
     public LocalDateTime getCreatedDate() {
         return createdDate;
     }
@@ -141,5 +133,13 @@ public class Order {
 
     public void setShippingMethod(String shippingMethod) {
         this.shippingMethod = shippingMethod;
+    }
+
+    public Address getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public void setShippingAddress(Address shippingAddress) {
+        this.shippingAddress = shippingAddress;
     }
 }
