@@ -1,37 +1,43 @@
 package com.egen.model;
 
-import org.springframework.beans.factory.annotation.Value;
-
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(name = "customer", indexes = {
+        @Index(columnList = "customer_id", name = "customer_id_index")
+})
 public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "customer_id")
     private long id;
 
-    @Column(name = "firstname")
+    @Column(name = "customer_firstname")
     private String firstName;
 
-    @Column(name = "lastname")
+    @Column(name = "customer_lastname")
     private String lastName;
 
-    @Column(name ="email" ,unique = true)
+    @Column(name ="customer_email" ,unique = true)
     private String email;
 
-    @Column(name = "number")
+    @Column(name = "customer_number")
     private String phoneNumber;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
+    public List<Order> orders;
 
     public Customer() {
     }
 
-    public Customer(String firstName, String lastName, String email, String phoneNumber) {
+    public Customer(String firstName, String lastName, String email, String phoneNumber, List<Order> orders) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.orders = orders;
     }
 
     public long getId() {
@@ -72,5 +78,13 @@ public class Customer {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 }

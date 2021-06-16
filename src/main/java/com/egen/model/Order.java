@@ -5,57 +5,60 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
+@Table(name = "orders")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "orders_id")
     private long id;
 
-    @Column(name = "order_status")
+    @Column(name = "orders_status")
     private OrderStatus status;
 
-    @Column(name = "customer_id")
-    private long customerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id",referencedColumnName = "customer_id")
+    public Customer customer;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
-    private List<Items> items;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "orders")
+    public List<Items> items;
 
-    @Column(name = "subtotal")
+    @Column(name = "orders_subtotal")
     private double subtotal;
 
-    @Column(name = "tax")
+    @Column(name = "orders_tax")
     private double tax;
 
-    @Column(name = "shipping_charges")
+    @Column(name = "orders_shipping_charges")
     private double shippingCharges;
 
-    @Column(name = "total")
+    @Column(name = "orders_total")
     private double total;
 
-    @Column(name = "created_date")
+    @Column(name = "order_created_date")
     private Timestamp createdDate;
 
-    @Column(name = "modified_date")
+    @Column(name = "orders_modified_date")
     private Timestamp modifiedDate;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
-    private List<Payment> paymentMethods;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "orders")
+    public List<Payment> payment;
 
-    @Column(name = "shipping_method")
+    @Column(name = "orders_shipping_method")
     private ShippingMethod shippingMethod;
 
-    @OneToOne(cascade = {CascadeType.ALL})
-    private Address shippingAddress;
+    @OneToOne(fetch = FetchType.LAZY)
+    public Address shippingAddress;
 
     public Order(){}
 
-    public Order(OrderStatus status, List<Items> items, double tax, double shippingCharges, Timestamp createdDate, Timestamp modifiedDate, List<Payment> paymentMethods, ShippingMethod shippingMethod, Address shippingAddress) {
+    public Order(OrderStatus status, List<Items> items, double tax, double shippingCharges, Timestamp createdDate, Timestamp modifiedDate, List<Payment> payment, ShippingMethod shippingMethod, Address shippingAddress) {
         this.status = status;
         this.items = items;
         this.tax = tax;
         this.shippingCharges = shippingCharges;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
-        this.paymentMethods = paymentMethods;
+        this.payment = payment;
         this.shippingMethod = shippingMethod;
         this.shippingAddress = shippingAddress;
     }
@@ -129,14 +132,13 @@ public class Order {
         this.modifiedDate = modifiedDate;
     }
 
-    public List<Payment> getPaymentMethods() {
-        return paymentMethods;
+    public List<Payment> getPayment() {
+        return payment;
     }
 
-    public void setPaymentMethods(List<Payment> paymentMethods) {
-        this.paymentMethods = paymentMethods;
+    public void setPayment(List<Payment> payment) {
+        this.payment = payment;
     }
-
 
     public ShippingMethod getShippingMethod() {
         return shippingMethod;
@@ -154,11 +156,13 @@ public class Order {
         this.shippingAddress = shippingAddress;
     }
 
-    public long getCustomerId() {
-        return customerId;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setCustomerId(long customerId) {
-        this.customerId = customerId;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
+
+
 }

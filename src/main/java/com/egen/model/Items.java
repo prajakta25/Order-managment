@@ -4,30 +4,31 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
+@Table(name = "items")
 public class Items {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "items_id")
     private long id;
 
-    @Column(name = "name")
+    @Column(name = "items_name")
     private String name;
 
-    @Column(name = "quantity")
+    @Column(name = "items_quantity")
     private double quantity;
 
-    @Column(name = "cost")
+    @Column(name = "items_cost")
     private double cost;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id")
-    private Order order;
+    @JoinColumn(name = "orders_id")
+    public Order orders;
 
-    public Items(String name, double quantity, double cost, Order order) {
+    public Items(String name, double quantity, double cost) {
         this.name = name;
         this.quantity = quantity;
         this.cost = cost;
-        this.order = order;
     }
 
     public Items() { }
@@ -64,11 +65,11 @@ public class Items {
         this.quantity = quantity;
     }
 
-    public Order getOrder() {
-        return order;
+    public Order getOrders() {
+        return orders;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setOrders(Order orders) {
+        this.orders = orders;
     }
 }

@@ -1,26 +1,31 @@
 package com.egen.model;
 
 import javax.persistence.*;
-import java.util.UUID;
 
 @Entity
+@Table(name = "payment")
 public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "payment_id")
     private long id;
 
     @Column(name = "payment_method")
     private PaymentMethod paymentMethod;
 
-    @Column(name = "card_number")
+    @Column(name = "payment_card_number")
     private long cardNumber;
 
     @Column(name = "payment_confirmation_number")
     private long paymentConfirmationNumber;
 
     @OneToOne(cascade = {CascadeType.ALL})
-    private Address billingAddress;
+    public Address billingAddress;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "orders_id")
+    public Order orders;
 
     public Payment(PaymentMethod paymentMethod, long cardNumber, long paymentConfirmationNumber, Address billingAddress) {
         this.paymentConfirmationNumber = paymentConfirmationNumber;
@@ -55,7 +60,7 @@ public class Payment {
         this.paymentConfirmationNumber = paymentConfirmationNumber;
     }
 
-    public Address getBillingAddress() {
+  public Address getBillingAddress() {
         return billingAddress;
     }
 
