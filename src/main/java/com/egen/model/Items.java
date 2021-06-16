@@ -1,35 +1,42 @@
 package com.egen.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
 public class Items {
 
     @Id
-    @Column(columnDefinition = "VARCHAR(36)")
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "quantity")
     private double quantity;
+
+    @Column(name = "cost")
     private double cost;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private Order order;
 
-    public Items(String name, double quantity, double cost) {
-        this.id= String.valueOf(UUID.randomUUID());
+    public Items(String name, double quantity, double cost, Order order) {
         this.name = name;
         this.quantity = quantity;
         this.cost = cost;
+        this.order = order;
     }
 
     public Items() { }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -41,19 +48,27 @@ public class Items {
         this.name = name;
     }
 
-    public double getQty() {
-        return quantity;
-    }
-
-    public void setQty(double quantity) {
-        this.quantity = quantity;
-    }
-
     public double getCost() {
         return cost;
     }
 
     public void setCost(double cost) {
         this.cost = cost;
+    }
+
+    public double getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(double quantity) {
+        this.quantity = quantity;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 }

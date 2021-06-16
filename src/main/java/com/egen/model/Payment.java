@@ -7,36 +7,35 @@ import java.util.UUID;
 public class Payment {
 
     @Id
-    @Column(columnDefinition = "VARCHAR(36)")
-    private String id;
-    private String paymentMethod;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    @Column(name = "payment_method")
+    private PaymentMethod paymentMethod;
+
+    @Column(name = "card_number")
     private long cardNumber;
-    private int cvv;
-    private String expiry;
+
+    @Column(name = "payment_confirmation_number")
     private long paymentConfirmationNumber;
-    @ManyToOne
-    private Customer customer;
-    @OneToOne
+
+    @OneToOne(cascade = {CascadeType.ALL})
     private Address billingAddress;
 
-    public Payment(String id, String paymentMethod, long cardNumber, int cvv, String expiry, long paymentConfirmationNumber, Customer customer, Address billingAddress) {
+    public Payment(PaymentMethod paymentMethod, long cardNumber, long paymentConfirmationNumber, Address billingAddress) {
         this.paymentConfirmationNumber = paymentConfirmationNumber;
-        this.customer = customer;
         this.billingAddress = billingAddress;
-        this.id = String.valueOf(UUID.randomUUID());
         this.paymentMethod = paymentMethod;
         this.cardNumber = cardNumber;
-        this.cvv = cvv;
-        this.expiry = expiry;
     }
 
     public Payment() {}
 
-    public String getPaymentMethod() {
+    public PaymentMethod getPaymentMethod() {
         return paymentMethod;
     }
 
-    public void setPaymentMethod(String paymentMethod) {
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
 
@@ -46,30 +45,6 @@ public class Payment {
 
     public void setCardNumber(long cardNumber) {
         this.cardNumber = cardNumber;
-    }
-
-    public int getCvv() {
-        return cvv;
-    }
-
-    public void setCvv(int cvv) {
-        this.cvv = cvv;
-    }
-
-    public String getExpiry() {
-        return expiry;
-    }
-
-    public void setExpiry(String expiry) {
-        this.expiry = expiry;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
     }
 
     public long getPaymentConfirmationNumber() {
@@ -86,5 +61,13 @@ public class Payment {
 
     public void setBillingAddress(Address billingAddress) {
         this.billingAddress = billingAddress;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

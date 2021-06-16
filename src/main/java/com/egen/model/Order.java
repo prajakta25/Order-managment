@@ -1,37 +1,55 @@
 package com.egen.model;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
 public class Order {
     @Id
-    @Column(columnDefinition = "VARCHAR(36)")
-    private String id;
-    private String status;
-    @ManyToOne
-    private Customer customer;
-    @OneToMany
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    @Column(name = "order_status")
+    private OrderStatus status;
+
+    @Column(name = "customer_id")
+    private long customerId;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
     private List<Items> items;
+
+    @Column(name = "subtotal")
     private double subtotal;
+
+    @Column(name = "tax")
     private double tax;
+
+    @Column(name = "shipping_charges")
     private double shippingCharges;
+
+    @Column(name = "total")
     private double total;
-    private LocalDateTime createdDate;
-    private LocalDateTime modifiedDate;
-    @OneToMany
+
+    @Column(name = "created_date")
+    private Timestamp createdDate;
+
+    @Column(name = "modified_date")
+    private Timestamp modifiedDate;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
     private List<Payment> paymentMethods;
-    private String shippingMethod;
-    @OneToOne
+
+    @Column(name = "shipping_method")
+    private ShippingMethod shippingMethod;
+
+    @OneToOne(cascade = {CascadeType.ALL})
     private Address shippingAddress;
 
     public Order(){}
 
-    public Order(String id, String status, Customer customer, List<Items> items, double tax, double shippingCharges, LocalDateTime createdDate, LocalDateTime modifiedDate, List<Payment> paymentMethods, String shippingMethod, Address shippingAddress) {
-        this.id = id;
+    public Order(OrderStatus status, List<Items> items, double tax, double shippingCharges, Timestamp createdDate, Timestamp modifiedDate, List<Payment> paymentMethods, ShippingMethod shippingMethod, Address shippingAddress) {
         this.status = status;
-        this.customer = customer;
         this.items = items;
         this.tax = tax;
         this.shippingCharges = shippingCharges;
@@ -42,19 +60,19 @@ public class Order {
         this.shippingAddress = shippingAddress;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public String getStatus() {
+    public OrderStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(OrderStatus status) {
         this.status = status;
     }
 
@@ -70,7 +88,7 @@ public class Order {
         double subtotal=0.0d;
         List<Items> items=getItems();
         for(Items item: items) {
-            subtotal=subtotal + ((item.getCost())* (item.getQty()));
+            subtotal=subtotal + ((item.getCost())* (item.getQuantity()));
         }
         return subtotal;
     }
@@ -95,19 +113,19 @@ public class Order {
         double total=getSubtotal()+getTax()+getShippingCharges();
         return total;
     }
-    public LocalDateTime getCreatedDate() {
+    public Timestamp getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(LocalDateTime createdDate) {
+    public void setCreatedDate(Timestamp createdDate) {
         this.createdDate = createdDate;
     }
 
-    public LocalDateTime getModifiedDate() {
+    public Timestamp getModifiedDate() {
         return modifiedDate;
     }
 
-    public void setModifiedDate(LocalDateTime modifiedDate) {
+    public void setModifiedDate(Timestamp modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
 
@@ -119,19 +137,12 @@ public class Order {
         this.paymentMethods = paymentMethods;
     }
 
-    public Customer getCustomer() {
-        return customer;
-    }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
-    public String getShippingMethod() {
+    public ShippingMethod getShippingMethod() {
         return shippingMethod;
     }
 
-    public void setShippingMethod(String shippingMethod) {
+    public void setShippingMethod(ShippingMethod shippingMethod) {
         this.shippingMethod = shippingMethod;
     }
 
@@ -141,5 +152,13 @@ public class Order {
 
     public void setShippingAddress(Address shippingAddress) {
         this.shippingAddress = shippingAddress;
+    }
+
+    public long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(long customerId) {
+        this.customerId = customerId;
     }
 }

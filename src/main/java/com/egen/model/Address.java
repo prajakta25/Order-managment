@@ -1,29 +1,40 @@
 package com.egen.model;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.UUID;
+import java.sql.Timestamp;
 
 @Entity
 public class Address {
 
     @Id
-    @Column(columnDefinition = "VARCHAR(36)")
-    private String id;
-    private String type;
-    private String addressLine1;
-    private String addressLine2;
-    private String city;
-    private String state;
-    private int zip;
-    private LocalDateTime createdDate;
-    private LocalDateTime modifiedDate;
-    @ManyToOne
-    private Customer customer;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
 
-    public Address(String type, String addressLine1, String addressLine2, String city, String state, int zip, Customer customer) {
-        this.customer = customer;
-        this.id= String.valueOf(UUID.randomUUID());
+    @Column(name = "address_type")
+    private AddressType type;
+
+    @Column(name = "address_line_1")
+    private String addressLine1;
+
+    @Column(name = "address_line_2")
+    private String addressLine2;
+
+    @Column(name = "city")
+    private String city;
+
+    @Column(name = "state")
+    private String state;
+
+    @Column(name = "zip")
+    private int zip;
+
+    @Column(name = "created_date")
+    private Timestamp createdDate;
+
+    @Column(name = "modified_date")
+    private Timestamp modifiedDate;
+
+    public Address(AddressType type, String addressLine1, String addressLine2, String city, String state, int zip) {
         this.type = type;
         this.addressLine1 = addressLine1;
         this.addressLine2 = addressLine2;
@@ -36,19 +47,19 @@ public class Address {
 
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public String getType() {
+    public AddressType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(AddressType type) {
         this.type = type;
     }
 
@@ -92,27 +103,20 @@ public class Address {
         this.zip = zip;
     }
 
-    public LocalDateTime getCreatedDate() {
+    public Timestamp getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(LocalDateTime createdDate) {
+    public void setCreatedDate(Timestamp createdDate) {
         this.createdDate = createdDate;
     }
 
-    public LocalDateTime getModifiedDate() {
+    public Timestamp getModifiedDate() {
         return modifiedDate;
     }
 
-    public void setModifiedDate(LocalDateTime modifiedDate) {
+    public void setModifiedDate(Timestamp modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
 
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
 }
