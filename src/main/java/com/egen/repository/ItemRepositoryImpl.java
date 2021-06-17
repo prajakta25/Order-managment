@@ -41,6 +41,11 @@ public class ItemRepositoryImpl implements ItemRepository{
     }
 
     @Override
+    public void delete(long id) {
+        delete(getById(id));
+    }
+
+    @Override
     public void delete(Items item) {
         em.remove(item);
     }

@@ -10,5 +10,5 @@ public interface ItemRepository extends JpaRepository<Items,Long> {
     public List<Items> findAll();
     public Items create(Items item);
     public Items update(Items item);
-    public void delete(Items item);
+    public void delete(long id);
 }
