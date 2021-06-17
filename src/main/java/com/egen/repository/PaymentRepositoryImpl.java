@@ -40,6 +40,11 @@ public class PaymentRepositoryImpl implements PaymentRepository{
     }
 
     @Override
+    public void delete(long id){
+        delete(getById(id));
+    }
+
+    @Override
     public void delete(Payment payment) {
         em.remove(payment);
     }
