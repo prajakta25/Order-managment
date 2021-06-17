@@ -5,6 +5,10 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "items")
+@NamedQueries({
+        @NamedQuery(name="Items.findAll",
+                query = "SELECT itm FROM Items itm ORDER BY itm.id ")
+})
 public class Items {
 
     @Id

@@ -7,6 +7,10 @@ import java.util.List;
 @Table(name = "customer", indexes = {
         @Index(columnList = "customer_id", name = "customer_id_index")
 })
+@NamedQueries({
+        @NamedQuery(name="Customer.findAll",
+                query = "SELECT cust FROM Customer cust ORDER BY cust.id ")
+})
 public class Customer {
 
     @Id

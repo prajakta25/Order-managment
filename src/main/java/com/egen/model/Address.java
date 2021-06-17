@@ -7,6 +7,10 @@ import java.sql.Timestamp;
 @Table(name = "address", indexes = {
         @Index(columnList = "address_id", name = "address_id_index")
 })
+@NamedQueries({
+        @NamedQuery(name="Address.findAll",
+                query = "SELECT add FROM Address add ORDER BY add.id ")
+})
 public class Address {
 
     @Id

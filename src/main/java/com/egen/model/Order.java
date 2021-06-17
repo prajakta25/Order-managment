@@ -6,6 +6,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "orders")
+@NamedQueries({
+        @NamedQuery(name="Order.findAll",
+                    query = "SELECT ord FROM Order ord ORDER BY ord.id ")
+})
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
