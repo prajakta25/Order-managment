@@ -2,7 +2,9 @@ package com.egen.service;
 
 import com.egen.exception.BadRequestException;
 import com.egen.exception.ResourceNotFoundException;
+import com.egen.model.Items;
 import com.egen.model.Order;
+import com.egen.model.Payment;
 import com.egen.repository.OrderRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,15 @@ public class OrderService {
     @Autowired
     OrderRepositoryImpl orderRepositoryImpl;
 
+    @Autowired
+    ItemsService itemsService;
+
+    @Autowired
+    PaymentService paymentService;
+
+    @Autowired
+    AddressService addressService;
+
     public List<Order> getAllOrders(){
         List<Order> list = orderRepositoryImpl.findAll();
         if(list.size() == 0) {
@@ -27,7 +38,11 @@ public class OrderService {
     }
 
     public Order getOrderById(long id){
-        return orderRepositoryImpl.getById(id);
+        Order existing = orderRepositoryImpl.getById(id);
+        if(existing == null) {
+            throw new BadRequestException("Order with id " + id + " does not exists");
+        }
+        return existing;
     }
 
     public List<Order> getAllOrdersWithInInterval(ZonedDateTime startTime, ZonedDateTime endTime){
@@ -42,11 +57,27 @@ public class OrderService {
 
     @Transactional
     public Order placeOrder(Order order){
+
+        //create items
+        List<Items> item=order.getItems();
+        for(Items it : item) {
+            itemsService.create(it);
+        }
+
+        //create payment method
+        List<Payment> paymentsList = order.getPayment();
+        for(Payment paymnt : paymentsList) {
+            paymentService.create(paymnt);
+        }
+
+        //create address
+        addressService.create(order.getShippingAddress());
+
         Order existing = orderRepositoryImpl.create(order);
         if(existing == null) {
             throw new BadRequestException("Order with id " + order.getId() + "already exists");
         }
-        return order;
+        return existing;
     }
 
     @Transactional
@@ -60,6 +91,22 @@ public class OrderService {
 
     @Transactional
     public Order updateOrder(Order order){
+
+        //create items
+        List<Items> item=order.getItems();
+        for(Items it : item) {
+            itemsService.update(it);
+        }
+
+        //create payment method
+        List<Payment> paymentsList = order.getPayment();
+        for(Payment paymnt : paymentsList) {
+            paymentService.update(paymnt);
+        }
+
+        //create address
+        addressService.update(order.getShippingAddress());
+
         Order existing = orderRepositoryImpl.update(order);
         if(existing == null) {
             throw new ResourceNotFoundException("Order with id " + order.getId() + "does not exist");
