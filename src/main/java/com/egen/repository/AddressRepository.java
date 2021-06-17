@@ -12,7 +12,7 @@ public interface AddressRepository extends JpaRepository<Address,Long> {
     public  Address findOne(long id);
     public Address create(Address address);
     public Address update(Address address);
-    public void delete(Address address);
+    public void delete(long id);
 
 
 }

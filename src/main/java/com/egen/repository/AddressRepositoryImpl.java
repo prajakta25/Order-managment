@@ -43,7 +43,8 @@ public class AddressRepositoryImpl implements AddressRepository{
     }
 
     @Override
-    public void delete(Address address) {
+    public void delete(long id) {
+        Address address = getById(id);
         em.remove(address);
     }
 
@@ -174,6 +175,11 @@ public class AddressRepositoryImpl implements AddressRepository{
 
     @Override
     public void deleteById(Long aLong) {
+
+    }
+
+    @Override
+    public void delete(Address address) {
 
     }
 
