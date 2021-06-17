@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,12 +34,15 @@ public class AddressRepositoryImpl implements AddressRepository{
 
     @Override
     public Address create(Address address) {
+        address.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+        address.setModifiedDate(new Timestamp(System.currentTimeMillis()));
         em.persist(address);
         return address;
     }
 
     @Override
     public Address update(Address address) {
+        address.setModifiedDate(new Timestamp(System.currentTimeMillis()));
         return em.merge(address);
     }
 

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -27,14 +28,15 @@ public class OrderController {
         return ResponseEntity.ok(order);
     }
 
-    public ResponseEntity<List<Order>> getAllOrdersWithInInterval(ZonedDateTime startTime, ZonedDateTime endTime){
-        //TODO
-        return null;
+    @GetMapping("order/within-interval")
+    public ResponseEntity<List<Order>> getAllOrdersWithInInterval(@RequestParam(name = "startTime") Timestamp startTime, @RequestParam(name = "endTime") Timestamp endTime){
+
+        return ResponseEntity.ok(orderService.getAllOrdersWithInInterval(startTime,endTime));
     }
 
-    public ResponseEntity<List<Order>> top10OrdersWithHighestDollarAmountInZip(String zip){
-        //TODO
-        return null;
+    @GetMapping("order/top-10-zipcode/{zip}")
+    public ResponseEntity<List<Order>> top10OrdersWithHighestDollarAmountInZip(@PathVariable("zip") String zip){
+        return ResponseEntity.ok(orderService.top10OrdersWithHighestDollarAmountInZip(zip));
     }
 
     @PostMapping("order")

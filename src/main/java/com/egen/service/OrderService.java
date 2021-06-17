@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -45,14 +46,20 @@ public class OrderService {
         return existing;
     }
 
-    public List<Order> getAllOrdersWithInInterval(ZonedDateTime startTime, ZonedDateTime endTime){
-        //TODO
-        return null;
+    public List<Order> getAllOrdersWithInInterval(Timestamp startTime, Timestamp endTime){
+        List<Order> orderList = orderRepositoryImpl.getAllOrdersWithInInterval(startTime,endTime);
+        if(orderList.isEmpty()) {
+            throw new BadRequestException("Invalid time interval : "+startTime +" - "+endTime);
+        }
+        return orderList;
     }
 
     public List<Order> top10OrdersWithHighestDollarAmountInZip(String zip){
-        //TODO
-        return null;
+        List<Order> orderList = orderRepositoryImpl.top10OrdersWithHighestDollarAmountInZip(zip);
+        if(orderList.isEmpty()) {
+            throw new BadRequestException(zip + " does not exists");
+        }
+        return orderList;
     }
 
     @Transactional

@@ -12,6 +12,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,12 +36,15 @@ public class OrderRepositoryImpl implements OrderRepository{
 
     @Override
     public Order create(Order order) {
+        order.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+        order.setModifiedDate(new Timestamp(System.currentTimeMillis()));
         em.persist(order);
         return order;
     }
 
     @Override
     public Order update(Order order) {
+        order.setModifiedDate(new Timestamp(System.currentTimeMillis()));
         return em.merge(order);
     }
 
@@ -62,9 +67,20 @@ public class OrderRepositoryImpl implements OrderRepository{
 
     @Override
     public List<Order> top10OrdersWithHighestDollarAmountInZip(String zip){
-        return null;
+        Query query = em.createQuery("SELECT ord FROM Order ord JOIN Address add ON ord.shippingAddress.id=add.id WHERE add.zip=:paramZip ORDER BY ord.total DESC");
+        query.setParameter("paramZip",zip);
+        List<Order> list=query.setMaxResults(10).getResultList();
+        return list;
     }
 
+    @Override
+    public List<Order> getAllOrdersWithInInterval(Timestamp startTime, Timestamp endTime){
+        Query query = em.createQuery("SELECT ord FROM Order ord  WHERE ord.createdDate BETWEEN :ordStartTime AND :ordEndTime");
+        query.setParameter("ordStartTime",startTime);
+        query.setParameter("ordEndTime",endTime);
+        List<Order> list=query.getResultList();
+        return list;
+    }
     @Override
     public List<Order> findAll(Sort sort) {
         return null;
