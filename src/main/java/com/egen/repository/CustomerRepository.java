@@ -9,5 +9,5 @@ public interface CustomerRepository extends JpaRepository<Customer,Long> {
     public List<Customer> findAll();
     public Customer create(Customer cust);
     public Customer update(Customer cust);
-    public void delete(Customer cust);
+    public void delete(long id);
 }

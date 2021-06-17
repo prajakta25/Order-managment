@@ -42,6 +42,10 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         return em.merge(cust);
     }
 
+    @Override
+    public void delete(long id) {
+        delete(getById(id));
+    }
 
     @Override
     public void delete(Customer cust) {
